@@ -238,7 +238,6 @@ ISR(TIMER0_COMPB_vect)
 		PORTB ^= (1 << PORTB1);  // toggles the led
 		t_flag = 0;
 	}
-    /* -------- LED TOGGLE ------- */
 
     interrupt_counter--; 
     if(i==7) i=0;
@@ -270,21 +269,29 @@ void init()//initialization
 int main(void)
 {
     char dst_string[10], degr_string[10], sonarData[30];
-    double distance = 0, degree = 0;
+    double distance = 0, degree = 0, avg=0;
     init();
     while (1)
     {
         if(activate_sonar == 1 && last_step == 0)
         {   
-            TCCR0B= 0;
+            /* Disable timer */
+            TCCR0B = 0;
 
+            /* Measure distance */
+            for(int i=0; i < 10; i++)
+            {
+                avg += Distance_Measurement();
+            }
+            distance = (double) avg / 10;
             degree = (5.625 * degree_multiplier);
-            distance = Distance_Measurement();
-
             Send_Data(degree, distance);
 
             degree_multiplier++;
+            avg = 0;
             activate_sonar = 0;
+
+            /* Enable timer */
             TCCR0B= (1 << CS02);
         } else if (last_step == 1) 
         {
