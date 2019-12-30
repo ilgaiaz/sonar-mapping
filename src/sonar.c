@@ -61,7 +61,7 @@ void MOTOR_Init()
 
 void USART_Init()
 {
-	UCSR0B |= (1 << RXCIE0) | (1 << RXEN0) | (1 << TXEN0);  /* Turn on transmission and reception and enable receve interrupt */
+	UCSR0B |= (1 << RXCIE0) | (1 << RXEN0) | (1 << TXEN0);  /* Turn on transmission and reception and enable receive interrupt */
 	UCSR0C |= (1 << UCSZ01) | (1 << UCSZ00);                /* Use 8-bit character sizes */
 	UBRR0L = BAUD_PRESCALE;		                            /* Load lower 8-bits of the baud rate value */
 	UBRR0H = (BAUD_PRESCALE >> 8);	                        /* Load upper 8-bits */
@@ -153,8 +153,8 @@ double Distance_Measurement()
     /* ICP (Input Capture Pin) */ 
     /* When a change occurs on the ICP the value of TCNT1 is written to the ICR1 */
     while ((TIFR1 & (1 << ICF1)) == 0);		/* Wait for falling edge */
-    if(TimerOverflow > 3)
-        count = (long) 300*464;
+    if(TimerOverflow > 2)
+        count = (long) 282*464;
     else
         count = ICR1 + (65535 * TimerOverflow);	/* Take count */
     
