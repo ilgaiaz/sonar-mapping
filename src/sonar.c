@@ -153,7 +153,7 @@ double Distance_Measurement()
     /* ICP (Input Capture Pin) */ 
     /* When a change occurs on the ICP the value of TCNT1 is written to the ICR1 */
     while ((TIFR1 & (1 << ICF1)) == 0);		/* Wait for falling edge */
-    if(TimerOverflow > 2)
+    if(TimerOverflow >= 2)
         count = (long) 282*464;
     else
         count = ICR1 + (65535 * TimerOverflow);	/* Take count */
