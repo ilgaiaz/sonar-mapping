@@ -31,7 +31,7 @@ volatile int TimerOverflow = 0;
 /* --------------------------------------- SONAR ---------------------------------------- */
 void SONAR_Init()
 {
-    SONAR_Port |= (1 << SONAR_Trigger) | (1 << LED_Pin);	/* Make trigger pin as output and activate LED pin*/
+    SONAR_Dir |= (1 << SONAR_Trigger) | (1 << LED_Pin);	/* Make trigger pin as output and activate LED pin*/
     TIMSK1 = (1 << TOIE1);	                                /* Enable Timer1 overflow interrupts */
 	TCCR1A = 0;				                                /* Set all bit to zero Normal operation */
 }
@@ -134,7 +134,7 @@ double Distance_Measurement()
     double distance = 0;
 
     SONAR_Port |= (1 << SONAR_Trigger);
-    _delay_us(10);
+    _delay_us(15);
     SONAR_Port &= (~(1 << SONAR_Trigger));
     
     TCNT1 = 0;				/* Clear Timer counter */
@@ -153,6 +153,14 @@ double Distance_Measurement()
     /* ICP (Input Capture Pin) */ 
     /* When a change occurs on the ICP the value of TCNT1 is written to the ICR1 */
     while ((TIFR1 & (1 << ICF1)) == 0);		/* Wait for falling edge */
+    /* 
+        If overflow more than 2 consider the measurement out of range and assign the max value
+        Set maximum distance at 282 cm 
+        Because :  2^16 * 2 / 464 = 282 [cm]
+        where 2^16 max timer count
+        2 is the max overflow set
+        464 value for cm convertion (see below)
+    */
     if(TimerOverflow >= 2)
         count = (long) 282*464;
     else
@@ -189,6 +197,7 @@ ISR(TIMER0_COMPA_vect)
     }
 
      /* Every 5,625 degree activate Sonar */
+    interrupt_counter++;
     if ( interrupt_counter%64 == 0 )
     {
         activate_sonar = 1;
@@ -202,7 +211,6 @@ ISR(TIMER0_COMPA_vect)
 		t_flag = 0;
 	}
 
-    interrupt_counter++;
     if(i==7) i=0;
     else i++;
 
