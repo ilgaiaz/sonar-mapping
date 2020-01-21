@@ -53,6 +53,13 @@ On the PC side, a simple program has been developed in Python3. The program crea
 mapping. If so, a start mapping command is sent to the microcontroller which allows it to activate the reading of the data.
 During the room measurement, it is possible to see the data read by the microcontroller in the terminal.
 At the end of the reading, the microcontroller sends an end communication command and a map with the data read is created.
+Furthermore, a kalman filter has been developed and the results of the readings can be compared with the values ​​predicted by the filter.
+But these results work better if the distance variations are linear, i.e. if there are no obstacles in the room.  
+For the kalman filter was used the code of [zziz](https://github.com/zziz/kalman-filter/blob/master/README.md).  
+The dynamic system for the implementation of the filter was taken from the article:  
+"Kalman Filter Algorithm Design for HC-SR04 Ultrasonic Sensor Data Acquisition System" by Adnan Rafi Al Tahtawi 
+
+
 A graphical version of this interface is [available here](https://github.com/ilgaiaz/sonarQt/tree/master).
 
 ## Connection setting
@@ -83,12 +90,15 @@ Check the connection with:
 ls /dev |grep rfcomm
 ```
 
+Then on `mapping.py` the serial connection must be set as `/dev/rfcomm0`.
+
 ## Run
 After the configuration, the code is ready and is possible to run the `mapping.py` file.
 
 # Results
 
 Below is possible to see the final project made and a result map.
+
 
 
 ![finalProject](img/final.jpg)
