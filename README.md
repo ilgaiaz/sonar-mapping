@@ -23,18 +23,27 @@ This string will then be sent to the PC.
 4. Activate the sonar: Operation that is performed by activating the PIN trigger (I / O) of the sonar for 15us (At least 10us is required).
 5. Calculate the distance of an object: This operation is done by activating Timer1 when the Echo PIN (I / O) connected to the sonar detects a rising edge and saves the counter value when it detects a falling edge. Once the value is obtained, it is converted to [cm].
 
-### Motor 28byj-48:
+### Motor 28BYJ-48:
 The motor rotates the sensor during data acquisition. Every 5,625° (Every 64 steps) set the flag to enable the measurement through sonar. During the measurement it maintains the current position and starts to rotate again after the data has been sent to the PC.
 
+Source : [Interfacing Stepper Motor with AVR Microcontroller Atmega16](https://circuitdigest.com/microcontroller-projects/avr-microcontroller-atmega16-stepper-motor-interfacing)
+
 ### Sonar HC-SR04:
-Sonar is provided by the microcontroller via the PIN trigger, which must remain set for at least 15us. After sonar is enabled set the echo PIN and send the signal. When the signal goes back and hits the receiver it resets the echo PIN.
+Sonar is provided by the microcontroller via the PIN trigger, which must remain set for at least 15us. After sonar is enabled set the echo PIN and send the signal. When the signal goes back and hits the receiver it resets the echo PIN.  
+
+Source : [ElectronicWings](https://www.electronicwings.com/avr-atmega/ultrasonic-module-hc-sr04-interfacing-with-atmega1632)
 
 ### HC05 (Bluetooth)/CP2102 (USB to serial converter):
 HC05/CP2102 is used to receive the start measurement signal (the character 'A') from the PC (via interrupt). When this character is read room mapping begins.
-Subsequently, serial connection is used to transmit the string, previously created by the microcontroller, with data relating to the position of the motor and the measured distance.
+Subsequently, serial connection is used to transmit the string, previously created by the microcontroller, with data relating to the position of the motor and the measured distance.  
+
+Source :
+1. Bluetooth : [ElectronicWings](https://www.electronicwings.com/avr-atmega/hc-05-bluetooth-module-interfacing-with-atmega1632)  
+2. 28BYJ-48 : [ElectronicWings](https://www.electronicwings.com/avr-atmega/atmega1632-usart)
+
 
 ### PC side:
-On the PC side through a program developed in Python it is possible to create the serial connection with the microcontroller. Once the connection is established, is possible to send the signal to start the measurement. Subsequently, the program takes care of reading the strings received from the serial port. The position and distance data are extracted from the string using regular expressions that eliminate special characters and save all the data in a list, which will then be used to create the map via the python library: "matplotlib.pyplot"
+On the PC side through a program developed in Python it is possible to create the serial connection with the microcontroller. Once the connection is established, is possible to send the signal to start the measurement. Subsequently, the program takes care of reading the strings received from the serial port. The position and distance data are extracted from the string using regular expressions that eliminate special characters and save all the data in a list, which will then be used to create the map via the python library: `matplotlib.pyplot`
 
 # Module Schematic
 
@@ -46,6 +55,13 @@ For using the Bluetooth the connection is the same but the HC-05 module require:
 
 
 ![SonarArchitecture](img/schematic.jpg)
+
+# Programming the Atmega328p
+
+It is possible to build the code and program the atmga328p through the Atmel studio software for windows.  
+Alternatively for Linux you can use the two scripts `bulding.sh` and `run.sh` (after giving permissions `chmod +x filename`).
+installation of [Avrdude](https://www.nongnu.org/avrdude/) is required.
+
 
 # PC side
 
