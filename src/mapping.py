@@ -18,7 +18,7 @@ if __name__ == "__main__":
     while ser == None:
         try:
             #Open port at 9600,8,N,1 no timeout
-            ser = serial.Serial('/dev/rfcomm0')
+            ser = serial.Serial('/dev/ttyUSB0')
         except:
             print("Connection error. Unable to connect with ATMEGA328P")
             time.sleep(2)
@@ -30,6 +30,7 @@ if __name__ == "__main__":
     time.sleep(1)
     #Send char for enable the atmega328p 
     ser.write(b'A')
+    print("Command sendt")
 
     #read line from serial port
     line = ser.readline().strip()
@@ -45,7 +46,7 @@ if __name__ == "__main__":
         #Save and convert value on float
         theta.append(math.radians(float(degree)))
         r.append(float(distance))
-        print("\nDegree: {} Distance: {}".format(degree, distance))
+        print("\nDistance: {}".format(distance))
 
         #read line from serial port
         line = ser.readline().strip()
