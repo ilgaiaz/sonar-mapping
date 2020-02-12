@@ -1,8 +1,8 @@
 # Sonar mapping
 This is a project made during my Erasmus+ at ISEP (Instituto Superior de Engenharia do Porto).
 
-The request made for this project was to obtain a system capable of mapping a room, determining the distance of objects and walls from where the assessment is made. Furthermore, the system must be able to create a 2D map with the measures toke and to show them visually via the graphical interface.
-For the development have been used a sonar that allows you to measure the distance, a stepper motor to be able to rotate the sensor, so it's possible to acquire the measurements at 360° and a USB to serial converter module (CP2102) to send the collected data to the PC via UART.
+The request for this project was to obtain a system capable of mapping a room, determining the distance of objects and walls from where the assessment is performed. Furthermore, the system must be able to create a 2D map with the measures taken and to show them visually via the graphical interface.
+For the development a sonar has been used that allows you to measure the distance, a stepper motor to be able to rotate the sensor, so it's possible to acquire the measurements at 360° and a USB to serial converter module (CP2102) to send the collected data to the PC via UART.
 On the PC side was used Python and Qt to create a very simple interface able to:
 
 1. Enable the UART connection
@@ -24,7 +24,7 @@ This string will then be sent to the PC.
 5. Calculate the distance of an object: This operation is done by activating Timer1 when the Echo PIN (I / O) connected to the sonar detects a rising edge and saves the counter value when it detects a falling edge. Once the value is obtained, it is converted to [cm].
 
 ### Motor 28BYJ-48:
-The motor rotates the sensor during data acquisition. Every 5,625° (Every 64 steps) set the flag to enable the measurement through sonar. During the measurement it maintains the current position and starts to rotate again after the data has been sent to the PC.
+The motor rotates the sensor during data acquisition. Every 5,625° (Every 64 steps) set the flag to enable the measurement, through sonar. During the measurement it maintains the current position and starts to rotate again after the data has been sent to the PC.
 
 Source : [Interfacing Stepper Motor with AVR Microcontroller Atmega16](https://circuitdigest.com/microcontroller-projects/avr-microcontroller-atmega16-stepper-motor-interfacing)
 
@@ -34,8 +34,8 @@ Sonar is provided by the microcontroller via the PIN trigger, which must remain 
 Source : [ElectronicWings](https://www.electronicwings.com/avr-atmega/ultrasonic-module-hc-sr04-interfacing-with-atmega1632)
 
 ### HC05 (Bluetooth)/CP2102 (USB to serial converter):
-HC05/CP2102 is used to receive the start measurement signal (the character 'A') from the PC (via interrupt). When this character is read room mapping begins.
-Subsequently, serial connection is used to transmit the string, previously created by the microcontroller, with data relating to the position of the motor and the measured distance.  
+HC05/CP2102 is used to receive the start measurement signal (the character 'A') from the PC (via an interrupt). When this character is read room mapping begins.
+Subsequently, the serial connection is used to transmit the string, previously created by the microcontroller, with data relating to the position of the motor and the measured distance.  
 
 Source :
 1. Bluetooth : [ElectronicWings](https://www.electronicwings.com/avr-atmega/hc-05-bluetooth-module-interfacing-with-atmega1632)  
@@ -43,15 +43,15 @@ Source :
 
 
 ### PC side:
-On the PC side through a program developed in Python it is possible to create the serial connection with the microcontroller. Once the connection is established, is possible to send the signal to start the measurement. Subsequently, the program takes care of reading the strings received from the serial port. The position and distance data are extracted from the string using regular expressions that eliminate special characters and save all the data in a list, which will then be used to create the map via the python library: `matplotlib.pyplot`
+On the PC side through a program developed in Python, it is possible to create the serial connection with the microcontroller. Once the connection is established, is possible to send the signal to start the measurement. Subsequently, the program takes care of reading the strings received from the serial port. The position and distance data are extracted from the string using regular expressions that eliminate special characters and save all the data in a list, which will then be used to create the map via the python library: `matplotlib.pyplot`
 
 # Module Schematic
 
 Below is possible to see all the components used for creating the system, also all the connection made between them.  
 Note that in this schematic was use the CP2102 module.  
-For using the Bluetooth the connection is the same but the HC-05 module require:
-1. 1K resistence between his RXD PIN and the Atmega328's TXD PIN.
-2. 2k resistence between his RXD PIN and the earth.
+For using the Bluetooth the connection is the same but the HC-05 module requires:
+1. 1K resistance between his RXD PIN and the Atmega328's TXD PIN.
+2. 2k resistance between his RXD PIN and the earth.
 
 
 ![SonarArchitecture](img/schematic.jpg)
@@ -59,7 +59,7 @@ For using the Bluetooth the connection is the same but the HC-05 module require:
 # Programming the Atmega328p
 
 It is possible to build the code and program the atmga328p through the Atmel studio software for windows.  
-Alternatively for Linux you can use the two scripts `bulding.sh` and `run.sh` (after giving permissions `chmod +x filename`).
+Alternatively, for Linux you can use the two scripts `building.sh` and `run.sh` (after giving permissions `chmod +x filename`).
 installation of [Avrdude](https://www.nongnu.org/avrdude/) is required.
 
 
@@ -82,7 +82,7 @@ A graphical version of this interface is [available here](https://github.com/ilg
 
 ### USB to serial
 If the connection is made with the Bluetooth CP2102 is necessary to change on `mapping.py` the serial connection.
-By default is set to `/dev/ttyUSB0` so before star the program, is mandatory to check the corresponding connection an set it. If the connection is wrong
+By default is set to `/dev/ttyUSB0` so before starting the program is mandatory to check the corresponding connection an set it. If the connection is wrong
 an error message is shown on the terminal.
 
 ### Bluetooth (Linux)
@@ -90,7 +90,7 @@ If the connection is made with the Bluetooth module is mandatory to create the s
 For do that according to [ArchWiki](https://wiki.archlinux.org/index.php/Bluetooth#Console) 
 is necessary to:
  
-1. Pair the HC-05 (follow instruction on WikiArch)
+1. Pair the HC-05 (follow the instruction on WikiArch)
 2. Create the serial communication port
 
 The second point can be made with these commands:
@@ -106,14 +106,14 @@ Check the connection with:
 ls /dev |grep rfcomm
 ```
 
-Then on `mapping.py` the serial connection must be set as `/dev/rfcomm0`.
+Then on `mapping.py`, the serial connection must be set as `/dev/rfcomm0`.
 
 ## Run
 After the configuration, the code is ready and is possible to run the `mapping.py` file.
 
 # Results
 
-Below is possible to see the final project made and a result map.
+Below it is possible to see the complete final project and a result map.
 
 
 
